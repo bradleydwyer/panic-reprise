@@ -66,20 +66,33 @@ for a `data/` directory in the current directory or next to the executable.
 The output of `panic_resources.py extract` isn't enough to run the player; use
 the full importer.
 
-## Experimental HD intro and scroller
+<a id="experimental-hd-intro-and-scroller"></a>
 
-The `panic-hd` preview covers the opening through the PANIC logo, and with
-`--scroller`, `--rings`, `--field`, `--dots`, `--plasma`, `--greetings` and
-`--ending` continues through parts 2, 6, 5, 3, 4, 7 and 8, to the demo's end;
-`--full` is the same as `--ending`, the whole demo. Build and run it from the
-repository root after importing your data:
+## Experimental HD renderer
+
+The `panic-hd` renderer plays all eight parts in their original order, with
+modern, faithful HD and original views on the same music-driven timeline.
+Build and run the whole demo from the repository root after importing your
+data:
 
 ```sh
-cargo run --release --locked --features hires --bin panic-hd -- --modern
+cargo run --release --locked --features hires --bin panic-hd -- --full
 ```
 
-The modern mode renders extruded geometric models in perspective, with bevels,
-reflections, surface texture, ambient occlusion, HDR lighting and bloom.
+`--full` is the same as `--ending`: the whole demo, ending at about 249.17
+seconds (4:09). Add `--faithful` for faithful HD, `--original` for the
+original rendering or `--split` for the original beside the selected HD view.
+The [main README](../README.md) links the current full-demo video and
+summarises each scene's modern treatment.
+
+`--modern` alone plays the intro and holds on the PANIC logo. The flags
+`--transition`, `--scroller`, `--rings`, `--field`, `--dots`, `--plasma`,
+`--greetings` and `--ending` extend playback progressively through the
+following scenes; each includes everything before it.
+
+In the intro, modern mode renders extruded geometric models in perspective,
+with bevels, reflections, surface texture, ambient occlusion, HDR lighting and
+bloom.
 The logo moves from cool metal to incandescent metal on the right. Slow surface
 ripples and flowing texture shift its reflections like semi-liquid metal, with
 more movement at the hot end. Its starfield has 3,200 fine, round stars with
@@ -136,10 +149,11 @@ spilling from the warp through the narrowing gap, the bloom pulse as the doors
 settle, and the quick fade of the stars behind the landed plate are all
 authored.
 The soundtrack, cues and scene boundaries use the existing port unchanged.
-The plate lands at about 14.57 seconds; the preview holds there and ends its
-audio after another 4.91 seconds. The logo material keeps animating after the
-audio ends; Space pauses it too. End then Space lets you watch the logo directly.
-Later demo scenes are outside this preview.
+The plate lands at about 14.57 seconds. In intro-only mode (`--modern`), the
+preview holds there and ends its audio after another 4.91 seconds; the logo
+material keeps animating, and Space pauses it too. End then Space lets you
+watch the logo directly. With `--full` or a scene-extension flag, playback
+and music continue beyond the logo into the selected scenes.
 
 Add `--transition` to continue through the square wipe into part 2. It reads
 the 16 by 10 activation order from your local data and follows `Scroller`'s
@@ -1699,7 +1713,10 @@ and motion, and on the block fitted to the logo.
   polished dark stone. It lies as part 3 left it, drains from 186 to
   200 s, uncovering the slab, and over the plasma's fade out (219.33 to
   222.87) drains away to 40 units below the slab's lowest edge. The number
-  keys tune the water (part 3's too). It shows only by their light, so only while the plasma is lit
+  keys tune the water (part 3's too). Its mirror gain defaults to 1. It
+  mirrors the sheets and exposed stone, and shows the submerged stone
+  through refraction and absorption even while the plasma is dark. Small
+  pools remain in the carving as the surrounding water drains away
   ([docs/part4-plasma.md](../docs/part4-plasma.md)).
 - The arrival: on the slab frame part 3's own modern view, its box flared,
   is still drawn, and gives way to this one over 0.35 s. The stone comes in
@@ -1967,9 +1984,9 @@ part 5's against every part-5 frame, part 3's against every part-3
 frame, part 4's against every part-4 frame, part 7's against every
 part-7 frame and part 8's against every part-8 frame; one bakes the frame's
 shape from PSTART and checks what it measures.
-Two more need a GPU: one checks that part 5's smoke reaches the same state
-however a moment is reached (it re-simulates from the start at each of
-nine moments, a minute and a half), the others that part 3's, part 4's,
+Further ignored tests need a GPU: one checks that part 5's smoke reaches the
+same state however a moment is reached (it re-simulates from the start at each
+of nine moments, a minute and a half), the others that part 3's, part 4's,
 part 7's and part 8's frames are the same however they are reached (and
 that part 8 starts on part 7's last frame):
 
@@ -2040,11 +2057,11 @@ here. Don't commit any binary fixtures, including audio.
 and compares them with an earlier set, to catch unintended changes to the look
 while the shaders change. It needs only the Python standard library and your
 imported data, and writes everything under `artifacts/look-check/`, which Git
-ignores. Its 58 shots cover the modern intro letters, the plate and doors, the
+ignores. Its 102 shots cover the modern intro letters, the plate and doors, the
 logo, the laser cut, the scroller with each backdrop and lighting mode, parts 6,
-5 and 3 through their phases, faithful HD and the original view, at 960 × 540. Their
-times are authored test points, not cues from the original. `list` shows
-them, and `--only` selects shots or groups by name, with wildcards
+5, 3, 4, 7 and 8 through their phases, faithful HD and the original view, at
+960 × 540. Their times are authored test points, not cues from the original.
+`list` shows them, and `--only` selects shots or groups by name, with wildcards
 (`--only scroller,laser` or `--only 'intro-7*'`).
 
 ```sh

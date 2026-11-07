@@ -5,7 +5,7 @@ This repository has two parts with different licensing:
 | Part | Contents | Licence |
 |---|---|---|
 | Resource tools | Resource directory inspector/extractor, synthetic tests, release metadata and documentation | MIT, see [LICENSE](../LICENSE) |
-| Rust port and intro experiment | Rust player, modern intro renderer, their tests and build files, `tools/import_panic.py`, `tools/unpack_panic.py`, `tools/look_check.py` and its tests | No licence granted while rights are reviewed; see [rust/NOTICE](../rust/NOTICE) |
+| Rust port and modern renderer | Rust player, modern renderer for all eight parts, their tests and build files, `tools/import_panic.py`, `tools/unpack_panic.py`, `tools/look_check.py` and its tests | No licence granted while rights are reviewed; see [rust/NOTICE](../rust/NOTICE) |
 
 `rust/src/hd/wall.wgsl` (the bump wall shared by the scroller and part 6) also
 contains third-party code: a ray / rounded box intersection adapted from Inigo
@@ -14,10 +14,10 @@ in [rust/NOTICE](../rust/NOTICE) and beside the code, covers his code only.
 
 This repository starts with a source snapshot of the intro experiment built
 on [the Rust port](https://github.com/bradleydwyer/panic), based on commit
-`b48ef86`, plus the modern renderer work. It has fresh Git history and contains
-none of the history of the original private research project. The original
-port's licence boundaries are retained, including for the new code under
-`rust/`.
+`b48ef86`, plus the modern renderer work, which now covers all eight parts.
+It has fresh Git history and contains none of the history of the original
+private research project. The original port's licence boundaries are retained,
+including for the new code under `rust/`.
 
 ## What's left out
 

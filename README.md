@@ -2,35 +2,29 @@
 
 Playing with a modern rendering of Future Crew's 1992 demo **Panic**.
 
-[![Watch the whole demo, as it stands, on YouTube](https://img.youtube.com/vi/hyygt2N2go4/maxresdefault.jpg)](https://youtu.be/hyygt2N2go4)
+[![Watch the full demo on YouTube](docs/images/part4-plasma.jpg)](https://youtu.be/iu6sRaNYmYo)
 
-[▶ Watch the whole demo, as it stands, on YouTube](https://youtu.be/hyygt2N2go4)
+[▶ Watch the full demo on YouTube](https://youtu.be/iu6sRaNYmYo)
 
-So far this covers the opening through the PANIC logo, the square transition,
-experiments with the following double scroller, part 6's interference
-rings in the original's black and white under neon, rising into a pool of
-liquid chrome as the tune says "panic", part 5's deep Mandelbrot
-zoom and the Mandelbrot volcano that rises out of it, part 3's shade bobs
-and morphing dots as light painting through rising water, part 4's plasma
-as the light
-on a carved stone slab standing in that water, which then breaks up into
-the dust of part 7's lighthouse, part 7's greetings as crystal letters in
-the lighthouse's beam, and part 8's ending as an endless wall of green
-monitors switched off. The idea is to keep the
-sequence and music, and experiment with the rendering. There are chunky glass
-letters that refract the stars behind them, a polished gunmetal plate carrying
-the PANIC title that tumbles in from deep space reflecting the warp and lands
-as the logo screen, motion blur, a starfield that ramps into warp, the title
-then heating into metal with slowly moving surface reflections, and lighting
-that pulses and breathes with the music.
+The whole demo plays in its original scene order, with the original music
+and cues driving new materials, lighting and effects:
+
+| Part | Modern treatment |
+| --- | --- |
+| 1: Intro | Glass FUTURE CREW letters, a starfield accelerating into warp and a tumbling gunmetal PANIC title that heats after it lands |
+| 2: Scroller | A laser-cut tile transition, then glass lettering over a moving chrome bump wall |
+| 6: Rings | Neon symbols over black-and-white interference rings that rise into a pool of liquid chrome |
+| 5: Field | A deep Mandelbrot zoom, lit as a relief, with a volcano rising out of its final minibrot and smoke around the metal frame |
+| 3: Dots | Shade bobs and morphing objects as light painting through rising water, with underwater glow, ripples and plankton |
+| 4: Plasma | Sheets of plasma lighting a carved stone slab as the water drains away, then the slab breaking into dust |
+| 7: Greetings | Crystal letters in a lighthouse beam, with the slab's dust carried through the air |
+| 8: Ending | A camera pulling back from an endless wall of green monitors that switch off together |
 
 This builds on the [Rust port of Panic](https://github.com/bradleydwyer/panic).
-It's very much a work in progress. Every part from the intro to part 8 has
-a first modern treatment, and all of them are still changing. Part 5 is
-still essentially to do: what's there is an early experiment, and it runs
-slowly. The transitions between the scenes need more work too. The original
-player is included as a reference. The new letterforms and block motion are
-authored approximations, not recovered original 3D models.
+Every part now has a modern treatment. It's still an experiment: the scenes
+and their transitions are being refined. The original player and faithful HD
+view are included for comparison. The new geometry, materials and effects
+are authored interpretations, not recovered original 3D models.
 
 No original demo data, music or videos are stored in this repository; the
 images in `docs/images` are screenshots of this project's modern view. The
@@ -70,6 +64,10 @@ For a split comparison, with the original on the left:
 ```sh
 cargo run --release --locked --features hires --bin panic-hd -- --full --split
 ```
+
+Add `--faithful` to `--full` to play the whole demo in faithful HD, or
+`--original` for the original rendering. **M**, **Tab** and **C** switch
+between these views and the split comparison during playback.
 
 To continue through the next transition, where the logo screen is cut away
 in squares:
@@ -239,6 +237,9 @@ still has them.
 
 ![Part 5: the molten Mandelbrot mountain inside its frame](docs/images/part5-field.jpg)
 
+This screenshot shows the earlier mountain treatment; the video above shows
+the current volcano rising out of the zoom.
+
 `--field` carries on through part 5, to the frame part 3 starts from, with
 the music unbroken:
 
@@ -395,11 +396,12 @@ stone is seen by:
   pages, the plasma running on down them to the water. It is part 3's
   water, as level as part 3 left it; it drains from 186 to 200 seconds,
   uncovering the slab, and drains away from under it as the plasma fades
-  out. As it drains, the carved letters keep a little of it in their lower
-  ends. The water mirrors the plasma, long, quick swells drawing the
+  out. The water mirrors the plasma, long, quick swells drawing the
   reflection out into wavering streaks of its colours, and every second or
   so a drop lands beside the slab and sends out a ring of ripples. The
-  water is lit only by the sheets, so it comes up and fades with them.
+  water also mirrors the exposed stone; submerged stone is seen
+  through it with refraction and absorption. Small pools remain in the
+  carving as the surrounding water drains away.
   **D** swaps it for polished dark stone, and the number keys tune the
   mirror, the swell and the drops (part 3's water too) while the preview
   plays.
@@ -534,6 +536,8 @@ is authored.
 | --- | --- |
 | Space | Pause or resume |
 | Left / Right | Step one second; hold to scrub through time, faster the longer held |
+| Shift+Left / Shift+Right | Pause and step one 70 Hz frame; hold to keep stepping |
+| Cmd+Left / Cmd+Right | Previous or next section; Ctrl also works |
 | Home / R | Replay |
 | End | Pause on the finished logo |
 | M | Switch modern 3D / faithful HD |
@@ -548,12 +552,16 @@ is authored.
 Add `--fps` to show a frame-rate counter, and `--no-vsync` to see the uncapped
 rate.
 
-The logo appears around 14.57 seconds. The preview's audio ends around 19.49
-seconds, while the logo keeps animating. End, then Space, jumps straight to it.
+The logo appears around 14.57 seconds. With `--modern` alone, the audio ends
+around 19.49 seconds while the logo keeps animating. With `--full`, playback
+continues through all eight parts to the ending at about 249.17 seconds
+(4:09), then holds on the last frame. End, then Space, jumps to the logo and
+resumes from there in either mode.
 
-[The renderer notes](rust/README.md#experimental-hd-intro) cover the timing,
-rendering modes, 4K image capture and current limitations. The same document
-also explains how to run the original full demo player.
+[The renderer notes](rust/README.md#experimental-hd-renderer) cover the full
+tuning-key reference, timing, rendering modes, 4K image capture and current
+limitations. The same document also explains how to run the original full
+demo player.
 
 ## Development
 

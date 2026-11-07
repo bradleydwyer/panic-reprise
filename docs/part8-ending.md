@@ -3,17 +3,17 @@
 Notes on part 8 in the HD preview (`panic-hd --ending`): what is read from
 the port, what was observed, what is interpretation and what the modern view
 authors. The preview's other parts are described in
-[rust/README.md](../rust/README.md#experimental-hd-intro-and-scroller).
+[rust/README.md](../rust/README.md#experimental-hd-renderer).
 
 ```sh
 cargo run --release --locked --features hires --bin panic-hd -- --ending --seek 241
 cargo run --release --locked --features hires --bin panic-hd -- --ending --faithful --seek 246
 ```
 
-`--ending` continues past part 7 through part 8 to the demo's last frame,
-with the music unbroken. It implies `--greetings`. **M**, **Tab** and **C**
-work as in the earlier parts. Part 7's preview ends on part 8's first
-frame, the monster, at 242.30 seconds; part 8's preview begins on the same
+`--ending` (or its alias `--full`) continues past part 7 through part 8 to
+the demo's last frame, with the music unbroken. It implies `--greetings`.
+**M**, **Tab** and **C** work as in the earlier parts. Part 7's preview ends
+on part 8's first frame, the monster, at 242.30 seconds; part 8's preview begins on the same
 frame, and part 7's renderer draws it, so the hand-over is exact in both
 views. The clip ends at 249.17, on the demo's last frame, and holds there.
 
@@ -77,17 +77,20 @@ and timing:
   the rest of the raster lit but empty. The camera starts where the centre
   set's picture fills the frame's height as part 7's picture does (the
   empty raster, still black, at its sides) and holds close, barely moving
-  for the first second, while over 0.64 seconds the picture becomes an old
-  monitor's, strongly: the original's 200 lines as scanlines with dark gaps
-  between them (each line's spot wider as it is brighter), an aperture
-  grille of red, green and blue stripes (a triad to each source column), the
-  colour bleeding a little along the lines, bloom and halation on bright
-  parts, convergence error, a bowed raster and darker corners, and
-  everything graded toward a green-yellow phosphor (yellow-green mids,
-  green-black shadows, pale green highlights), keeping enough of the
-  picture's own colour for the monster to be recognised. The empty raster
-  round the picture glows faintly, its scanlines and stripes carrying on
-  across it, so it reads as dark, lit glass.
+  for the first second. The look comes on in stages: a pale mint grade
+  with lifted green blacks, soft highlights, colour bleed, bloom and
+  halation; then the aperture grille fades in; then the bowed raster,
+  darker corners and lit bezel emerge. Faint scanlines follow the
+  original's 200 rows, their spots widening with brightness. The grille
+  has continuous red, green and blue phosphor stripes, a triad every two
+  source rows by default, seen through curved glass by a virtual camera
+  with an 85-line sensor. Their pitch against that sensor produces broad
+  moiré bands, bowed and increasingly crowded toward the mirrored sides.
+  The first bands appear close up while the grille fades in; they widen,
+  vanish, reverse and return, each pass weaker, as the camera draws back.
+  This is modelled independently of the output resolution. The empty
+  raster round the picture glows faintly, its scanlines and stripes
+  carrying on across it, so it reads as dark, lit glass.
 - The scroll out. The camera then draws back and never stops, eased in on
   the logarithm of its distance: that speed rises from rest over the first
   220 frames (a smootherstep) and keeps rising gently to the end, so the
@@ -151,6 +154,12 @@ new renderer's and that the end is black. The pictures' constants are at the
 top of `rust/src/hd/ending_crt.wgsl`, the wall's in
 `rust/src/hd/ending_set.wgsl`, the timing and the camera in
 `rust/src/hd/ending.rs`.
+
+**T/Y** make the grille's stripes x1.1 coarser or finer, moving the moiré
+later or earlier; **Q/E** slow or speed the pull-back by x1.1. The window
+title reports the current pitch, the approximate first band pass and how
+many sets will be visible across the frame at the switch-off. The default
+is about three sets across on a 16:9 frame.
 
 At 2560 × 1440 on an Apple M5 Max, as `--bench` measures it (120 frames, on
 a machine in use), modern part 8 takes about 3 to 4 ms a frame, the widest

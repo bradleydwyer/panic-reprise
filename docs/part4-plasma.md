@@ -2,16 +2,16 @@
 
 These notes cover the ground in modern part 4 (light on stone), where its two
 sheets of light stand now, the slab's break-up into part 7's dust and the
-slab's right end. They belong to the Rust
-intro experiment, under the terms in [rust/NOTICE](../rust/NOTICE). The rest
-of the part is described under Part 4 in [rust/README.md](../rust/README.md).
+slab's right end. They belong to the modern renderer, under the terms in
+[rust/NOTICE](../rust/NOTICE). The rest of the part is described under
+[Part 4 in rust/README.md](../rust/README.md#part-4-plasma).
 
 The ground, both its looks (water, the default, and a polished stone floor on
 the preview's **D** key) and the sheets' new placement are all authored. None
 of it is recovered from the original, which has no ground: below its plasma
 and beside its logo the screen is black. Faithful HD and the original view
 are unchanged. The water itself (its reflectance, swell and drops,
-`water.wgsl`) is shared with part 3, whose objects fly over it, with the
+`water.wgsl`) is shared with part 3, whose objects fly through it, with the
 tuning keys below; part 3's notes in [rust/README.md](../rust/README.md)
 say where it lies there.
 
@@ -28,8 +28,17 @@ water straight below the line where the slab's base plane meets row 113,
 the plasma carried on down them below its last raster to the water
 (`PlasmaPreview::sheet_rasters`). Part 4's mirror gain is 1, water as it
 is, by default: this level water meets the camera near grazing, where it
-mirrors enough. What follows describes the ground as it was first laid, at
-the slab's base, which the sheets' placement still starts from.
+mirrors enough. The exposed stone is mirrored in it, and the submerged
+stone is seen through its moving surface, refracted and dimmed by the water.
+The carving keeps small pools as the surrounding water drains away (below).
+
+### Earlier ground and sheet placement
+
+The measurements below describe the earlier ground at the slab's base.
+The current sheets keep the same top edges but extend down to the shared
+level water, carrying the plasma below its last raster. The earlier
+projection measurements are retained here to explain that construction;
+they do not describe the current waterline or viewing angle.
 
 The camera and the slab come from the fit to the logo, which is measured when
 the preview loads (`plasma_stone.rs`). The focal length is 262.8 rows, the
@@ -38,9 +47,9 @@ block's tilt 31.3 degrees and its near top edge 504 units away. The block is
 and its base is below the frame: the front face's bottom edge projects to
 row 210.
 
-- **The ground** is the plane the slab stands on: its base, 100 units below
-  its top face and level with it, seen through the same camera. Its horizon
-  is at row -60, above the frame. Seen straight back from the camera's axis,
+- **The earlier ground** was the plane the slab stands on: its base,
+  100 units below its top face and level with it, seen through the same
+  camera. Its horizon is at row -60, above the frame. Seen straight back from the camera's axis,
   it reaches the bottom of the plasma's last raster (row 113, read from the
   code) 366.5 units behind the slab's near edge, 172.6 behind its far edge.
 - **The sheets before:** their bottom edges were near the height of the top
@@ -48,9 +57,9 @@ row 210.
   further. On a ground at the slab's base they would have floated 95 and 29
   units above it. The ground below them projects to rows 121 to 141: under
   the plasma's edge, hidden by the slab in the middle and visible beside it.
-- **The sheets now** stand on the ground, both on the line where it meets row
-  113, so their bottom edges still project to the plasma's last raster. Their
-  top edges are the same points as before (row -60), so on the screen each
+- **The revised sheets on that earlier ground** stood on the line where it
+  meets row 113, so their bottom edges still project to the plasma's last
+  raster. Their top edges are the same points as before (row -60), so on the screen each
   covers what it did, and what it shows there is unchanged: each point of a
   sheet takes the colour the original shows where it projects. Only their
   slope changed:
@@ -61,15 +70,15 @@ row 210.
     at the ground.
   - Both are wider (a half width of 881 units, before 709 and 829), so they
     still cover a 21:9 drawable at their new foot.
-- **What that changes:** the sheets' lower parts are further from the slab,
-  so its light and its polished top's mirror image change a little. On 1440p
+- **What that changed:** the sheets' lower parts were further from the slab,
+  so its light and its polished top's mirror image changed a little. On 1440p
   stills at full level, the top face's mean colour moved by up to about 5
   levels in 255, and by up to about 11 toward its far edge, where the mirror
   image changes most. That image now shows the sheets a little higher up:
   at the near edge about row 46 of the plasma (before about 64), at the far
   edge about row 86 (before about 108).
 
-## Ruled out
+### Alternatives ruled out for the earlier ground
 
 - **Bringing the sheets down to the ground where they stood:** their planes
   meet it at rows 118 and 132, so beside the slab the plasma would have to
@@ -85,11 +94,11 @@ row 210.
 
 - **The mirror:** the reflected ray finds both sheets and their glow, weighted
   by Fresnel's equations for unpolarised light on water (index 1.333: 2% head
-  on, rising steeply toward grazing). This camera looks down 28 to 52 degrees
-  onto the visible water, where water reflects only about 2 to 7%, which reads
-  darker than the polished floor. So the mirror image carries an authored
-  gain of 3 (`WATER_MIRROR`; 1 is water as it is). It is not faded with
-  distance.
+  on, rising steeply toward grazing), or the exposed stone where it blocks
+  them. The current level water meets the camera near grazing, so part 4's
+  gain defaults to 1. The shared mirror key changes the reflected share to
+  `1 - (1 - F)^gain`; part 3 keeps its authored default gain of 3
+  (`WATER_MIRROR`). Reflections are not faded with distance.
 - **The swell:** four long directional waves, mostly coming from the sheets
   toward the camera, with wavelengths of 280, 175, 115 and 78 units and
   steepnesses of 0.026 down to 0.008. Their periods go with the square root
@@ -102,8 +111,11 @@ row 210.
   That draws the mirror image out into the vertical streaks of water.
 - **Its body** scatters a little of the sheets' light back: of what enters,
   less what the slab keeps from it, so the water is a little darker in the
-  slab's shade.
-- **Flicker:** over five consecutive 60 fps frames at 205 s, the water's
+  slab's shade. The stone below the surface is traced along the refracted
+  ray, with absorption over the ray's path and the depth the light travels
+  through (`WATER_CLARITY` in `plasma_light.wgsl`).
+- **Earlier flicker check, with the ground at the slab's base:** over five
+  consecutive 60 fps frames at 205 s, the water's
   frame-to-frame changes stay within the plasma's own, since it mirrors the
   plasma. Its second differences peak at 35 levels, against the plasma's 45.
 - **Drops** (their times and places authored, their rings physical): at
@@ -126,7 +138,8 @@ row 210.
   consecutive frames they add no flicker of their own.
 - **Tuning keys** (the preview's, each step x0.8 or x1.25 against the
   authored swell and rate; the defaults were chosen by eye with them):
-  - **1/2:** the mirror's gain, from 1 (water as it is) to 8; 3 by default.
+  - **1/2:** the mirror's gain, about 0.33 to 3.05 in part 4, default 1
+    (unmodified water). The same key tunes part 3 from 1 to 8, default 3.
   - **3/4:** the swell's height (its slopes), down to exactly 0, a flat
     mirror, and up to about x15; x3.8 by default.
   - **5/6:** the swell's speed, about x0.26 to x15; x3.8 by default. The
@@ -139,6 +152,11 @@ row 210.
     (a drop every 0.9 s on average), where six drops at once, all the
     shader holds, would start to cut drops short; x3.8 (a drop every 1.2 s)
     by default. A change re-times the drops.
+  - **Shift+1/2:** the shared water's tilt, a degree less or more, from
+    -15 to 30 degrees (default 3).
+  - **Shift+-/=:** its depth at the end of part 3, x1.1 nearer or further
+    below the camera, from 40 to 700 units (default 100). Part 4 starts at
+    that depth, then follows the drain described above.
   - The window's title shows the current values.
 - **Left out** (when the ground was the slab's base): the waterline was the slab's base, which is below the frame and
   hidden behind the slab. A ring of ripples from the slab was tried and left
@@ -157,7 +175,7 @@ row 210.
   sharp at the sheets' foot and softer further off. It fades over 900 units
   of the ray and is weighted by Schlick's Fresnel, so it is strongest at
   grazing angles, toward the sheets. The sheets' bottom edges stand on the
-  floor and are not faded, so the image meets them.
+  ground and are not faded, so the image meets them.
 - **The sheets' light on the floor:** it is gathered over the same cells as on
   the stone, by their exact form factors. From that is taken what the slab
   keeps from each point: each side of the block the point sees, in three
@@ -165,20 +183,21 @@ row 210.
   it. The sheets lean over the floor, so it is lit almost evenly; on a floor
   this dark the mirror image dominates.
 
-## In both
+## Ground lighting and transitions
 
 - **The slab in the mirror:** the reflected ray is marched against the slab
-  too, but from this camera the slab's image cannot appear. The camera looks
-  down about 31 degrees at a block whose base is below the frame, and every
-  point of the ground in view, beside the slab or behind it, mirrors rays that
-  travel away from it. Only the ground in front of the slab would mirror it,
-  and that is below the frame.
-- **Lighting:** the ground shows only by the sheets' light. The warm key light
-  is taken as a spot on the slab and does not reach the ground.
-- **The arrival:** the ground is dark while the slab comes out of part 3's
-  flare and while the plasma is dark.
-- **The fades:** the ground emerges as the plasma's level rises (187.51 to
-  191.06) and fades with it (219.33 to 222.87).
+  too. With the current level water, the exposed stone is mirrored just
+  below where it emerges. The earlier ground at the slab's base kept that
+  image below the frame.
+- **Lighting:** the ground gathers the sheets' light and reflects the stone.
+  The warm key light is taken as a spot on the slab and does not directly
+  light the ground; the submerged slab is visible through the water even
+  while the plasma is dark.
+- **The arrival:** the water is carried through from part 3 as the slab
+  comes out of its flare, then drains to uncover the stone.
+- **The fades:** the reflected plasma emerges as its level rises (187.51 to
+  191.06) and fades with it (219.33 to 222.87). The water also drains away
+  over the fade out.
 - **The slide:** the original moves only the logo, by the line compare.
   Where part 7 follows, the slab breaks up where it rests into part 7's
   dust instead (`slab_breakup.rs`; rust/README.md, part 4). Without it,
@@ -190,10 +209,10 @@ row 210.
 - **The hand-over:** with the break-up, part 7's view is drawn from the
   slide's cue on, its light coming up from black 1.19 s early; without
   it, part 7 still opens from black at 225.43.
-- **Unchanged frames:** compared on 1440p stills, the frames from the slab
-  frame to the plasma's first light, and those of the slide, differ from
-  before only on the slab's right end (below), and the two grounds give the
-  same frames there. The keys' defaults keep the water's frames as they
+- **Earlier comparisons, before the shared level water:** on 1440p stills,
+  the frames from the slab frame to the plasma's first light, and those of
+  the slide, differed from before only on the slab's right end (below), and the two grounds gave the
+  same frames there. The keys' defaults kept the water's frames as they
   were before the keys, but for a few dozen pixels a frame off by one
   level (the gain and the clock now read from the controls) and where a
   drop's rings are.
@@ -205,7 +224,7 @@ the slab down off the screen from 2F00 and opens part 7 on black.
 
 - **Where part 7 follows,** from the slide's first frame, 224.24 s, the slab
   stays where it rests and breaks up into part 7's dust. Without part 7
-  (`--plasma`) it slides away as before (In both, above).
+  (`--plasma`) it slides away as before (Ground lighting and transitions, above).
 - **The grains:** its top and front faces are a jittered grid of cells, one
   grain each, a Voronoi tiling of each face, with a cell for every one of
   part 7's 211,224 motes (a few over: those grains float up and fade).

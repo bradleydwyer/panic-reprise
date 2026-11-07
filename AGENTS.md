@@ -1,9 +1,9 @@
 # Panic reprise
 
-This is an experiment with modern rendering of Panic's intro through the logo,
-built on the Rust port. Preserve the original sequence and music cues while
-developing the modern renderer. Don't present authored geometry or motion as
-recovered original models or equations.
+This is an experiment with modern rendering of all eight parts of Panic,
+built on the Rust port. Preserve the original scene order (1, 2, 6, 5, 3, 4,
+7, 8) and music cues while developing the modern renderer. Don't present
+authored geometry or motion as recovered original models or equations.
 
 This repository is public, including the Rust port and the data importer, at
 the owner's request. Don't change its visibility unless asked. Its history is
